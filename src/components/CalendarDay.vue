@@ -1,10 +1,19 @@
 <template>
-  <div :class="classObject">{{day.format("D")}}</div>
+  <div :class="classObject" @click="captureClick">{{day.format("D")}}</div>
 </template>
 
 <script>
 export default {
   props: ['day'],
+  methods: {
+    captureClick(event) {
+      this.$store.commit('eventFormPos', {
+        x: event.clientX,
+        y: event.clientY,
+      });
+      this.$store.commit('eventFormActive', true);
+    },
+  },
   computed: {
     classObject() {
       return {
