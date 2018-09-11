@@ -2,6 +2,12 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+import moment from 'moment-timezone';
+moment.locale('pt-br');
+moment.tz.setDefault('UTC');
+
+import Axios from 'axios';
+
 export default new Vuex.Store({
   state: {
     currentYear: 2018,
@@ -9,6 +15,8 @@ export default new Vuex.Store({
     eventFormPosX: 0,
     eventFormPosY: 0,
     eventFormActive: false,
+    eventFormDate: moment(),
+    events: [],
   },
   mutations: {
     setCurrentMonth(state, payload) {
@@ -23,6 +31,30 @@ export default new Vuex.Store({
     },
     eventFormActive(state, payload) {
       state.eventFormActive = payload;
+    },
+    eventFormDate(state, payload) {
+      state.eventFormDate = payload;
+    },
+    addEvent(state, payload) {
+      state.events.push(payload);
+    },
+  },
+  actions: {
+    addEvent(context, payload) {
+      return new Promise((resolve, reject) => {
+        let obj = {
+          description: payload,
+          date: context.state.eventFormDate,
+        };
+        Axios.post('/addEvent', obj).then(response => {
+          if (response.status === 200) {
+            context.commit('addEvent', obj);
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      });
     },
   },
 });

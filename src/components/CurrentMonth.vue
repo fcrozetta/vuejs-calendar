@@ -9,7 +9,11 @@
 <script>
 export default {
   methods: {
+    closeEventForm() {
+      this.$store.commit('eventFormActive', false);
+    },
     dec() {
+      this.closeEventForm();
       if (this.month === 1) {
         this.$store.commit('setCurrentMonth', 12);
         this.$store.commit('setCurrentYear', this.year - 1);
@@ -18,6 +22,7 @@ export default {
       }
     },
     inc() {
+      this.closeEventForm();
       if (this.month === 12) {
         this.$store.commit('setCurrentMonth', 1);
         this.$store.commit('setCurrentYear', this.year + 1);
